@@ -1,0 +1,6 @@
+stage,accounts,weighted_pipeline,average_ai_score,data_quality_issues
+Discovery,4,70240,40,4
+Qualified,4,128310,61.5,1
+Proposal,4,184070,78,1
+Negotiation,2,124680,98,0
+Won,1,28000,62,0
