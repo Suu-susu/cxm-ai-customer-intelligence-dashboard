@@ -1,0 +1,980 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CXM Intelligence Hub | Jiashuo Su</title>
+  <meta name="description" content="CRM, AI lead scoring and customer intelligence dashboard for technology consulting internship applications." />
+  <style>
+    :root {
+      --ink: #172033;
+      --muted: #667187;
+      --line: #d8dee9;
+      --panel: #ffffff;
+      --soft: #f5f7fb;
+      --navy: #19335f;
+      --blue: #2563eb;
+      --cyan: #0891b2;
+      --green: #15803d;
+      --amber: #b45309;
+      --red: #b91c1c;
+      --purple: #7c3aed;
+      --shadow: 0 18px 42px rgba(23, 32, 51, 0.11);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, #f8fafc 0%, #eef3f8 100%);
+    }
+
+    button, input, select, textarea { font: inherit; }
+
+    .app {
+      width: min(1440px, calc(100vw - 28px));
+      margin: 0 auto;
+      padding: 18px 0 26px;
+    }
+
+    header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 16px;
+      align-items: end;
+      margin-bottom: 14px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--navy), var(--cyan));
+      box-shadow: 0 10px 22px rgba(37, 99, 235, 0.22);
+    }
+
+    .logo svg { width: 25px; height: 25px; fill: #fff; }
+
+    h1 {
+      margin: 0;
+      font-size: 25px;
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+
+    .sub {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      min-height: 38px;
+      border: 1px solid #c9d4e4;
+      background: #fff;
+      color: var(--ink);
+      border-radius: 8px;
+      padding: 8px 11px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      white-space: nowrap;
+    }
+
+    .btn.primary {
+      border-color: var(--blue);
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .btn:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+      outline: 3px solid rgba(37, 99, 235, .22);
+      outline-offset: 2px;
+    }
+
+    .hidden { display: none; }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 310px minmax(0, 1fr) 330px;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .fit-strip {
+      margin: 0 0 14px;
+      padding: 14px;
+    }
+
+    .fit-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+
+    .fit-head p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+      max-width: 820px;
+    }
+
+    .fit-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .fit-item {
+      min-height: 82px;
+      border: 1px solid #d8e2f0;
+      border-radius: 8px;
+      background: linear-gradient(180deg, #ffffff, #f7faff);
+      padding: 10px;
+    }
+
+    .fit-item strong {
+      display: block;
+      font-size: 13px;
+      line-height: 1.25;
+      color: #1f3354;
+    }
+
+    .fit-item span {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .panel {
+      background: rgba(255,255,255,.95);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .pad { padding: 15px; }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: 15.5px;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    .filters {
+      display: grid;
+      gap: 10px;
+    }
+
+    label {
+      display: grid;
+      gap: 5px;
+      color: #344052;
+      font-size: 13px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid #cfd8e6;
+      border-radius: 8px;
+      background: #fff;
+      padding: 9px 10px;
+      color: var(--ink);
+      min-height: 38px;
+    }
+
+    textarea {
+      min-height: 104px;
+      resize: vertical;
+      line-height: 1.45;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 84px;
+      border-radius: 999px;
+      padding: 5px 8px;
+      font-size: 12px;
+      color: #263342;
+      background: #eef3f9;
+    }
+
+    .status.hot { background: #fee2e2; color: #8f1f1f; }
+    .status.warm { background: #fef3c7; color: #7a4c05; }
+    .status.good { background: #dcfce7; color: #166534; }
+    .status.blue { background: #dbeafe; color: #1e40af; }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .metric {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 8px;
+      padding: 13px;
+      min-height: 86px;
+    }
+
+    .metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+
+    .metric strong {
+      font-size: 23px;
+      line-height: 1.1;
+    }
+
+    .metric small {
+      display: block;
+      color: #68758b;
+      margin-top: 6px;
+      font-size: 12px;
+    }
+
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .chart {
+      min-height: 260px;
+    }
+
+    .bars { display: grid; gap: 10px; }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: 118px 1fr 44px;
+      gap: 9px;
+      align-items: center;
+      font-size: 13px;
+    }
+
+    .bar {
+      height: 12px;
+      border-radius: 999px;
+      background: #e8edf5;
+      overflow: hidden;
+    }
+
+    .bar span {
+      display: block;
+      width: var(--w);
+      height: 100%;
+      background: var(--c);
+      border-radius: inherit;
+    }
+
+    .table-wrap {
+      overflow: auto;
+      max-height: 438px;
+      border-top: 1px solid var(--line);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      min-width: 920px;
+    }
+
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 10px 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background: #f6f8fb;
+      color: #3b4556;
+      font-size: 12px;
+    }
+
+    tr.selected td {
+      background: #eef6ff;
+    }
+
+    .account {
+      font-weight: 700;
+      color: #1f2b3d;
+    }
+
+    .muted { color: var(--muted); }
+
+    .score {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 86px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--c);
+    }
+
+    .insights {
+      display: grid;
+      gap: 10px;
+    }
+
+    .insight {
+      border: 1px solid var(--line);
+      background: #fbfcfe;
+      border-radius: 8px;
+      padding: 11px;
+    }
+
+    .insight strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 14px;
+    }
+
+    .insight p {
+      margin: 0;
+      color: #4d5b70;
+      font-size: 13px;
+      line-height: 1.42;
+    }
+
+    .pipeline {
+      display: grid;
+      gap: 8px;
+    }
+
+    .stage {
+      display: grid;
+      grid-template-columns: 104px 1fr 44px;
+      gap: 8px;
+      align-items: center;
+      font-size: 13px;
+    }
+
+    .sql-box {
+      background: #101827;
+      color: #dbeafe;
+      border-radius: 8px;
+      padding: 12px;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 12.5px;
+      line-height: 1.45;
+      min-height: 106px;
+      overflow: auto;
+    }
+
+    .proposal {
+      display: grid;
+      gap: 10px;
+    }
+
+    .proposal-output {
+      border: 1px solid var(--line);
+      background: #fbfcff;
+      border-radius: 8px;
+      padding: 12px;
+      min-height: 160px;
+      color: #334155;
+      line-height: 1.45;
+      font-size: 13.5px;
+      white-space: pre-wrap;
+    }
+
+    .quality-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .quality-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      padding: 9px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcfe;
+      font-size: 13px;
+    }
+
+    .note {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    svg { max-width: 100%; }
+
+    @media (max-width: 1180px) {
+      .layout { grid-template-columns: 300px minmax(0, 1fr); }
+      .right { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+      .fit-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 860px) {
+      header { grid-template-columns: 1fr; align-items: start; }
+      .top-actions { justify-content: flex-start; }
+      .layout, .grid2, .right { grid-template-columns: 1fr; }
+      .metrics { grid-template-columns: 1fr 1fr; }
+      .fit-head { display: block; }
+      .fit-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 560px) {
+      .app { width: min(100vw - 18px, 1440px); padding-top: 12px; }
+      .metrics { grid-template-columns: 1fr; }
+      .bar-row, .stage { grid-template-columns: 1fr; gap: 5px; }
+      .fit-grid { grid-template-columns: 1fr; }
+      h1 { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M4 4h16v4H4V4Zm0 6h7v10H4V10Zm9 0h7v4h-7v-4Zm0 6h7v4h-7v-4Z"/></svg>
+        </div>
+        <div>
+          <h1>CXM Intelligence Hub</h1>
+          <p class="sub">CRM data quality, AI lead scoring and consulting dashboard for a technology stream internship</p>
+        </div>
+      </div>
+      <div class="top-actions">
+        <label class="btn" for="csvInput">Import CSV</label>
+        <input id="csvInput" class="hidden" type="file" accept=".csv,text/csv" />
+        <button class="btn" id="resetData" type="button">Reset data</button>
+        <button class="btn primary" id="exportCsv" type="button">Export scored CSV</button>
+      </div>
+    </header>
+
+    <section class="panel fit-strip" aria-label="Technology stream fit">
+      <div class="fit-head">
+        <div>
+          <h2>Technology stream fit</h2>
+          <p>Portfolio demo for a CRM, data analytics and AI consulting internship. It uses realistic synthetic business records and shows how customer data can become a ranked sales pipeline, reporting dashboard and client proposal workflow.</p>
+        </div>
+        <span class="status blue">Internship-ready</span>
+      </div>
+      <div class="fit-grid">
+        <div class="fit-item"><strong>Python / SQL logic</strong><span>Data cleaning, scoring rules and query-style filtering.</span></div>
+        <div class="fit-item"><strong>Power BI reporting</strong><span>KPI cards, trend line, pipeline and segment visuals.</span></div>
+        <div class="fit-item"><strong>Salesforce CRM</strong><span>Lead stages, account health, next action and duplicate checks.</span></div>
+        <div class="fit-item"><strong>Azure / Snowflake</strong><span>Cloud-ready data warehouse and integration framing.</span></div>
+        <div class="fit-item"><strong>API integration</strong><span>CSV import/export path designed for CRM and service data feeds.</span></div>
+        <div class="fit-item"><strong>Generative AI</strong><span>Account context is converted into a practical proposal outline.</span></div>
+      </div>
+    </section>
+
+    <section class="layout">
+      <aside class="panel pad">
+        <h2>CRM filters</h2>
+        <div class="filters">
+          <label>Search account or owner
+            <input id="search" type="search" placeholder="e.g. healthcare, Grace, renewal" />
+          </label>
+          <label>Industry
+            <select id="industryFilter"></select>
+          </label>
+          <label>Pipeline stage
+            <select id="stageFilter"></select>
+          </label>
+          <label>AI segment
+            <select id="segmentFilter"></select>
+          </label>
+          <label>Minimum AI score
+            <input id="minScore" type="range" min="0" max="100" value="0" />
+          </label>
+          <span class="muted" id="scoreLabel">Minimum score: 0</span>
+        </div>
+
+        <h2 style="margin-top:18px">Data quality checks</h2>
+        <div class="quality-list" id="qualityList"></div>
+        <p class="note">Checks are designed like an analyst workflow: duplicate leads, invalid email domains, stale next actions and missing CRM fields are flagged before dashboard reporting.</p>
+      </aside>
+
+      <section>
+        <div class="metrics" id="metrics"></div>
+
+        <div class="grid2">
+          <section class="panel pad chart">
+            <h2>Salesforce-style pipeline</h2>
+            <div class="pipeline" id="pipeline"></div>
+          </section>
+          <section class="panel pad chart">
+            <h2>Power BI-style revenue trend</h2>
+            <svg id="trendChart" viewBox="0 0 520 220" role="img" aria-label="Monthly pipeline trend"></svg>
+          </section>
+        </div>
+
+        <div class="grid2">
+          <section class="panel pad chart">
+            <h2>Customer segments</h2>
+            <div class="bars" id="segments"></div>
+          </section>
+          <section class="panel pad chart">
+            <h2>Technology opportunities</h2>
+            <div class="bars" id="techBars"></div>
+          </section>
+        </div>
+
+        <section class="panel">
+          <div class="pad" style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+            <h2 style="margin:0">Scored CRM accounts</h2>
+            <span class="muted" id="recordCount"></span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Account</th>
+                  <th>Industry</th>
+                  <th>Stage</th>
+                  <th>AI score</th>
+                  <th>Segment</th>
+                  <th>Opportunity</th>
+                  <th>Risks</th>
+                  <th>Next action</th>
+                </tr>
+              </thead>
+              <tbody id="crmRows"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
+      <aside class="right">
+        <section class="panel pad">
+          <h2>AI consulting recommendation</h2>
+          <div class="insights" id="insights"></div>
+        </section>
+
+        <section class="panel pad">
+          <h2>SQL-style query logic</h2>
+          <div class="sql-box" id="sqlBox"></div>
+          <p class="note">This mirrors how the dashboard could be moved to Snowflake, Azure SQL or a CRM warehouse.</p>
+        </section>
+
+        <section class="panel pad">
+          <h2>Generative AI proposal assistant</h2>
+          <div class="proposal">
+            <label>Selected account context
+              <textarea id="proposalContext"></textarea>
+            </label>
+            <button class="btn primary" id="generateProposal" type="button">Generate client proposal</button>
+            <div class="proposal-output" id="proposalOutput"></div>
+          </div>
+        </section>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    const baseRecords = [
+      { account: "NorthCare Clinics", industry: "Healthcare", stage: "Proposal", owner: "Grace", revenue: 86000, probability: 67, tickets: 18, satisfaction: 72, lastContact: 4, email: "ops@northcare.nz", duplicate: false, opportunity: "Power BI clinical operations dashboard", stack: ["Power BI", "Azure", "API"], notes: "Needs dashboard for patient flow and support ticket visibility." },
+      { account: "Auckland Retail Group", industry: "Retail", stage: "Qualified", owner: "Mia", revenue: 42000, probability: 46, tickets: 9, satisfaction: 81, lastContact: 8, email: "digital@arg.co.nz", duplicate: false, opportunity: "CRM lead scoring and campaign segmentation", stack: ["Salesforce", "AI", "SQL"], notes: "Marketing team wants better lead prioritisation." },
+      { account: "Harbour Logistics", industry: "Logistics", stage: "Discovery", owner: "Grace", revenue: 62000, probability: 38, tickets: 26, satisfaction: 61, lastContact: 15, email: "it@harbourlogistics.co.nz", duplicate: false, opportunity: "API integration and workflow automation", stack: ["API", "Azure", "SQL"], notes: "Manual spreadsheets slow daily freight reporting." },
+      { account: "Uni Services Lab", industry: "Education", stage: "Proposal", owner: "Noah", revenue: 58000, probability: 59, tickets: 7, satisfaction: 86, lastContact: 3, email: "projects@uniservices.nz", duplicate: false, opportunity: "Research project CRM and dashboard", stack: ["Power BI", "Snowflake", "SQL"], notes: "Good fit for student-friendly analytics pilot." },
+      { account: "GreenGrow Farms", industry: "Agriculture", stage: "Qualified", owner: "Grace", revenue: 39000, probability: 52, tickets: 14, satisfaction: 69, lastContact: 5, email: "admin@greengrow.nz", duplicate: false, opportunity: "AI image triage and field data dashboard", stack: ["AI", "API", "Power BI"], notes: "Interested in image AI and field data capture." },
+      { account: "Civic Energy Trust", industry: "Utilities", stage: "Negotiation", owner: "Mia", revenue: 93000, probability: 72, tickets: 21, satisfaction: 66, lastContact: 2, email: "data@civicenergy.org.nz", duplicate: false, opportunity: "Snowflake data mart and executive reporting", stack: ["Snowflake", "Power BI", "Azure"], notes: "Board wants a clearer operational reporting layer." },
+      { account: "Pacific Insurance", industry: "Finance", stage: "Discovery", owner: "Aria", revenue: 76000, probability: 41, tickets: 32, satisfaction: 58, lastContact: 21, email: "crm@pacificinsurance.nz", duplicate: false, opportunity: "Case management analytics", stack: ["Salesforce", "SQL", "AI"], notes: "High support burden and slow case triage." },
+      { account: "Metro Fitness", industry: "Consumer", stage: "Won", owner: "Noah", revenue: 28000, probability: 100, tickets: 6, satisfaction: 89, lastContact: 6, email: "hello@metrofit.nz", duplicate: false, opportunity: "Retention dashboard", stack: ["Power BI", "SQL"], notes: "Small but successful retention pilot." },
+      { account: "Southern MedTech", industry: "Healthcare", stage: "Qualified", owner: "Grace", revenue: 118000, probability: 54, tickets: 11, satisfaction: 74, lastContact: 6, email: "product@southernmedtech.nz", duplicate: false, opportunity: "AI quality workflow and device support reporting", stack: ["AI", "Azure", "API"], notes: "Strong health-tech reference candidate." },
+      { account: "CloudWorks MSP", industry: "Technology", stage: "Proposal", owner: "Aria", revenue: 67000, probability: 63, tickets: 16, satisfaction: 77, lastContact: 9, email: "sales@cloudworks.nz", duplicate: false, opportunity: "Azure integration assessment", stack: ["Azure", "API", "SQL"], notes: "Potential systems integration partner." },
+      { account: "Auckland Retail Group", industry: "Retail", stage: "Discovery", owner: "Mia", revenue: 18000, probability: 24, tickets: 4, satisfaction: 83, lastContact: 30, email: "digital@arg.co.nz", duplicate: true, opportunity: "Duplicate CRM record cleanup", stack: ["Salesforce", "SQL"], notes: "Duplicate account should be merged before reporting." },
+      { account: "FreshBox Grocery", industry: "Retail", stage: "Negotiation", owner: "Grace", revenue: 74000, probability: 78, tickets: 13, satisfaction: 71, lastContact: 1, email: "ops@freshbox.co.nz", duplicate: false, opportunity: "Demand dashboard and API feed", stack: ["API", "Power BI", "Snowflake"], notes: "Ready for next-stage consulting proposal." },
+      { account: "Tāmaki Council Services", industry: "Public Sector", stage: "Qualified", owner: "Noah", revenue: 51000, probability: 49, tickets: 25, satisfaction: 63, lastContact: 11, email: "service@tamaki.govt.nz", duplicate: false, opportunity: "Citizen service analytics", stack: ["Power BI", "SQL", "AI"], notes: "Needs low-risk dashboard pilot and governance framing." },
+      { account: "EduPath Online", industry: "Education", stage: "Discovery", owner: "Grace", revenue: 32000, probability: 35, tickets: 19, satisfaction: 64, lastContact: 18, email: "support@edupath.nz", duplicate: false, opportunity: "Student support automation", stack: ["AI", "Salesforce", "API"], notes: "Good generative AI support assistant candidate." },
+      { account: "Marine Safety Co", industry: "Manufacturing", stage: "Proposal", owner: "Mia", revenue: 82000, probability: 61, tickets: 12, satisfaction: 80, lastContact: 7, email: "invalid-email", duplicate: false, opportunity: "Quality reporting and service workflow", stack: ["Power BI", "Azure", "SQL"], notes: "Invalid CRM email must be fixed before campaign outreach." }
+    ];
+
+    const stages = ["Discovery", "Qualified", "Proposal", "Negotiation", "Won"];
+    const stageWeight = { Discovery: 8, Qualified: 17, Proposal: 28, Negotiation: 35, Won: 15 };
+    let records = baseRecords.map(enrich);
+    let selectedAccount = records[0].account;
+
+    const $ = id => document.getElementById(id);
+
+    function enrich(record) {
+      const valueScore = Math.min(30, record.revenue / 4000);
+      const probScore = record.probability * 0.28;
+      const urgencyScore = Math.max(0, 18 - record.lastContact) * 0.75;
+      const painScore = Math.min(18, record.tickets * 0.55 + Math.max(0, 75 - record.satisfaction) * 0.28);
+      const dataPenalty = record.duplicate || !isValidEmail(record.email) ? 10 : 0;
+      const score = Math.max(0, Math.min(100, Math.round(valueScore + probScore + urgencyScore + painScore + stageWeight[record.stage] - dataPenalty)));
+      let segment = "Nurture";
+      if (score >= 76) segment = "High-value priority";
+      else if (score >= 62) segment = "Proposal-ready";
+      else if (record.tickets >= 22 || record.satisfaction < 65) segment = "At-risk service";
+      else if (score >= 45) segment = "Qualified opportunity";
+      const risks = [];
+      if (record.duplicate) risks.push("Duplicate record");
+      if (!isValidEmail(record.email)) risks.push("Invalid email");
+      if (record.lastContact > 14) risks.push("Stale contact");
+      if (record.tickets > 20) risks.push("High case volume");
+      if (record.satisfaction < 65) risks.push("Low satisfaction");
+      return { ...record, score, segment, risks };
+    }
+
+    function isValidEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    function initSelect(id, values, label) {
+      const select = $(id);
+      select.innerHTML = `<option value="">All ${label}</option>` + values.map(v => `<option value="${v}">${v}</option>`).join("");
+    }
+
+    function setup() {
+      initSelect("industryFilter", [...new Set(records.map(r => r.industry))].sort(), "industries");
+      initSelect("stageFilter", stages, "stages");
+      initSelect("segmentFilter", [...new Set(records.map(r => r.segment))].sort(), "segments");
+      ["search", "industryFilter", "stageFilter", "segmentFilter", "minScore"].forEach(id => $(id).addEventListener("input", render));
+      $("exportCsv").addEventListener("click", exportCsv);
+      $("resetData").addEventListener("click", () => {
+        records = baseRecords.map(enrich);
+        selectedAccount = records[0].account;
+        setup();
+        render();
+      });
+      $("generateProposal").addEventListener("click", generateProposal);
+      $("csvInput").addEventListener("change", importCsv);
+      render();
+    }
+
+    function filteredRecords() {
+      const q = $("search").value.trim().toLowerCase();
+      const industry = $("industryFilter").value;
+      const stage = $("stageFilter").value;
+      const segment = $("segmentFilter").value;
+      const minScore = Number($("minScore").value);
+      $("scoreLabel").textContent = `Minimum score: ${minScore}`;
+      return records.filter(r => {
+        const haystack = `${r.account} ${r.industry} ${r.stage} ${r.owner} ${r.opportunity} ${r.notes} ${r.stack.join(" ")}`.toLowerCase();
+        return (!q || haystack.includes(q)) && (!industry || r.industry === industry) && (!stage || r.stage === stage) && (!segment || r.segment === segment) && r.score >= minScore;
+      }).sort((a, b) => b.score - a.score);
+    }
+
+    function render() {
+      const data = filteredRecords();
+      if (!data.find(r => r.account === selectedAccount) && data[0]) selectedAccount = data[0].account;
+      renderMetrics(data);
+      renderPipeline(data);
+      renderTrend(data);
+      renderSegments(data);
+      renderTech(data);
+      renderTable(data);
+      renderQuality(data);
+      renderInsights(data);
+      renderSql();
+      syncProposalContext();
+    }
+
+    function sum(data, key) {
+      return data.reduce((acc, r) => acc + r[key], 0);
+    }
+
+    function renderMetrics(data) {
+      const weighted = data.length ? Math.round(data.reduce((acc, r) => acc + r.revenue * r.probability / 100, 0)) : 0;
+      const high = data.filter(r => r.score >= 76).length;
+      const risk = data.filter(r => r.risks.length).length;
+      const avg = data.length ? Math.round(data.reduce((acc, r) => acc + r.score, 0) / data.length) : 0;
+      $("metrics").innerHTML = [
+        ["Filtered accounts", data.length, "Active CRM records"],
+        ["Weighted pipeline", `$${Math.round(weighted / 1000)}k`, "Revenue x probability"],
+        ["Priority accounts", high, "AI score 76+"],
+        ["Average AI score", avg, `${risk} records need cleanup`]
+      ].map(m => `<div class="metric"><span>${m[0]}</span><strong>${m[1]}</strong><small>${m[2]}</small></div>`).join("");
+    }
+
+    function renderPipeline(data) {
+      const max = Math.max(...stages.map(s => data.filter(r => r.stage === s).length), 1);
+      $("pipeline").innerHTML = stages.map(stage => {
+        const count = data.filter(r => r.stage === stage).length;
+        return `<div class="stage"><span>${stage}</span><div class="bar"><span style="--w:${count / max * 100}%;--c:${stage === "Won" ? "var(--green)" : "var(--blue)"}"></span></div><strong>${count}</strong></div>`;
+      }).join("");
+    }
+
+    function renderTrend(data) {
+      const months = ["Sep", "Oct", "Nov", "Dec", "Jan", "Feb"];
+      const base = data.reduce((acc, r) => acc + r.revenue * r.probability / 100, 0);
+      const values = months.map((_, i) => Math.round(base * (0.62 + i * 0.09 + (i % 2) * 0.04) / 1000));
+      const max = Math.max(...values, 1);
+      const points = values.map((v, i) => {
+        const x = 48 + i * 86;
+        const y = 178 - (v / max) * 128;
+        return [x, y, v];
+      });
+      const path = points.map((p, i) => `${i ? "L" : "M"} ${p[0]} ${p[1]}`).join(" ");
+      $("trendChart").innerHTML = `
+        <rect x="0" y="0" width="520" height="220" rx="8" fill="#fbfcfe"></rect>
+        <line x1="42" y1="178" x2="492" y2="178" stroke="#d8dee9"></line>
+        <line x1="42" y1="40" x2="42" y2="178" stroke="#d8dee9"></line>
+        <path d="${path}" fill="none" stroke="#2563eb" stroke-width="4" stroke-linecap="round"></path>
+        ${points.map(([x, y, v]) => `<circle cx="${x}" cy="${y}" r="5" fill="#0891b2"></circle><text x="${x - 17}" y="${y - 11}" font-size="12" fill="#334155">$${v}k</text>`).join("")}
+        ${months.map((m, i) => `<text x="${40 + i * 86}" y="200" font-size="12" fill="#64748b">${m}</text>`).join("")}
+      `;
+    }
+
+    function renderSegments(data) {
+      const groups = groupCount(data, "segment");
+      const max = Math.max(...Object.values(groups), 1);
+      $("segments").innerHTML = Object.entries(groups).sort((a, b) => b[1] - a[1]).map(([name, count]) =>
+        `<div class="bar-row"><span>${name}</span><div class="bar"><span style="--w:${count / max * 100}%;--c:${segmentColor(name)}"></span></div><strong>${count}</strong></div>`
+      ).join("") || `<p class="muted">No matching accounts.</p>`;
+    }
+
+    function renderTech(data) {
+      const counts = {};
+      data.forEach(r => r.stack.forEach(s => counts[s] = (counts[s] || 0) + 1));
+      const max = Math.max(...Object.values(counts), 1);
+      $("techBars").innerHTML = Object.entries(counts).sort((a, b) => b[1] - a[1]).map(([name, count]) =>
+        `<div class="bar-row"><span>${name}</span><div class="bar"><span style="--w:${count / max * 100}%;--c:${techColor(name)}"></span></div><strong>${count}</strong></div>`
+      ).join("") || `<p class="muted">No technology tags in this filter.</p>`;
+    }
+
+    function groupCount(data, key) {
+      return data.reduce((acc, r) => {
+        acc[r[key]] = (acc[r[key]] || 0) + 1;
+        return acc;
+      }, {});
+    }
+
+    function renderTable(data) {
+      $("recordCount").textContent = `${data.length} records shown`;
+      $("crmRows").innerHTML = data.map(r => `
+        <tr class="${r.account === selectedAccount ? "selected" : ""}" data-account="${escapeHtml(r.account)}">
+          <td><span class="account">${escapeHtml(r.account)}</span><br><span class="muted">${escapeHtml(r.owner)} · ${escapeHtml(r.email)}</span></td>
+          <td>${escapeHtml(r.industry)}</td>
+          <td>${status(r.stage, "blue")}</td>
+          <td><span class="score"><span class="dot" style="--c:${scoreColor(r.score)}"></span>${r.score}</span></td>
+          <td>${status(r.segment, r.score >= 76 ? "hot" : r.score >= 62 ? "warm" : r.segment.includes("risk") ? "hot" : "good")}</td>
+          <td>${escapeHtml(r.opportunity)}<br><span class="muted">${r.stack.join(" · ")}</span></td>
+          <td>${r.risks.length ? r.risks.map(x => status(x, "warm")).join(" ") : status("Clean", "good")}</td>
+          <td>${nextAction(r)}</td>
+        </tr>
+      `).join("");
+      document.querySelectorAll("#crmRows tr").forEach(row => row.addEventListener("click", () => {
+        selectedAccount = row.dataset.account;
+        render();
+      }));
+    }
+
+    function renderQuality(data) {
+      const checks = [
+        ["Duplicate accounts", data.filter(r => r.duplicate).length],
+        ["Invalid email fields", data.filter(r => !isValidEmail(r.email)).length],
+        ["Stale next action", data.filter(r => r.lastContact > 14).length],
+        ["High support case volume", data.filter(r => r.tickets > 20).length]
+      ];
+      $("qualityList").innerHTML = checks.map(([name, count]) =>
+        `<div class="quality-item"><span>${name}</span>${status(count ? `${count} flagged` : "Pass", count ? "warm" : "good")}</div>`
+      ).join("");
+    }
+
+    function renderInsights(data) {
+      const top = data[0];
+      const atRisk = data.filter(r => r.segment === "At-risk service").length;
+      const aiOpps = data.filter(r => r.stack.includes("AI")).length;
+      const powerBi = data.filter(r => r.stack.includes("Power BI")).length;
+      $("insights").innerHTML = [
+        ["Best next account", top ? `${top.account}: ${top.opportunity}` : "No account selected", top ? `AI score ${top.score}. Recommended action: ${nextActionText(top)}.` : "Adjust filters to show accounts."],
+        ["Consulting angle", `${powerBi} dashboard opportunities and ${aiOpps} AI opportunities`, "Lead with a small discovery sprint, then propose CRM data cleanup, dashboard reporting and workflow automation."],
+        ["Risk handling", `${atRisk} at-risk service accounts`, "Use support tickets and satisfaction as early warning signals before pitching automation or analytics work."]
+      ].map(i => `<div class="insight"><strong>${i[0]}</strong><p>${i[1]}</p><p>${i[2]}</p></div>`).join("");
+    }
+
+    function renderSql() {
+      const minScore = Number($("minScore").value);
+      const industry = $("industryFilter").value || "%";
+      const stage = $("stageFilter").value || "%";
+      $("sqlBox").textContent =
+`SELECT account, industry, stage, ai_score, segment, opportunity
+FROM crm_accounts
+WHERE ai_score >= ${minScore}
+  AND industry LIKE '${industry}'
+  AND stage LIKE '${stage}'
+ORDER BY ai_score DESC;
+
+-- Score = revenue value + probability + urgency + pain points
+-- Penalty applied for duplicate records and invalid emails`;
+    }
+
+    function syncProposalContext() {
+      const account = records.find(r => r.account === selectedAccount) || filteredRecords()[0];
+      if (!account) return;
+      $("proposalContext").value = `${account.account}
+Industry: ${account.industry}
+Current stage: ${account.stage}
+AI score: ${account.score}
+Opportunity: ${account.opportunity}
+Stack: ${account.stack.join(", ")}
+Business notes: ${account.notes}`;
+      generateProposal(false);
+    }
+
+    function generateProposal(showFocus = true) {
+      const account = records.find(r => r.account === selectedAccount) || filteredRecords()[0];
+      if (!account) {
+        $("proposalOutput").textContent = "No account selected.";
+        return;
+      }
+      $("proposalOutput").textContent =
+`Client proposal outline for ${account.account}
+
+1. Discovery
+Review CRM fields, support cases, current reporting pain points and integration needs.
+
+2. Data foundation
+Clean duplicate records, validate contact fields and map CRM data to a SQL-ready model.
+
+3. Dashboard sprint
+Build a Power BI-style dashboard for pipeline, support load, customer segment and next best action.
+
+4. AI workflow
+Apply lead scoring and recommendation logic to prioritise high-value accounts and at-risk customers.
+
+5. Integration path
+Connect CRM, API feeds and cloud storage through an Azure or Snowflake-ready architecture.
+
+Recommended first action: ${nextActionText(account)}`;
+      if (showFocus) $("proposalOutput").scrollIntoView({ block: "nearest" });
+    }
+
+    function status(text, cls) {
+      return `<span class="status ${cls || ""}">${escapeHtml(String(text))}</span>`;
+    }
+
+    function scoreColor(score) {
+      if (score >= 76) return "var(--red)";
+      if (score >= 62) return "var(--amber)";
+      if (score >= 45) return "var(--blue)";
+      return "var(--green)";
+    }
+
+    function segmentColor(name) {
+      if (name.includes("priority")) return "var(--red)";
+      if (name.includes("Proposal")) return "var(--amber)";
+      if (name.includes("risk")) return "var(--purple)";
+      if (name.includes("Qualified")) return "var(--blue)";
+      return "var(--green)";
+    }
+
+    function techColor(name) {
+      return { "AI": "var(--purple)", "Power BI": "var(--blue)", "Azure": "var(--cyan)", "SQL": "var(--navy)", "Snowflake": "#0ea5e9", "Salesforce": "#2563eb", "API": "var(--green)" }[name] || "var(--muted)";
+    }
+
+    function nextActionText(r) {
+      if (r.duplicate || !isValidEmail(r.email)) return "Clean CRM record before outreach";
+      if (r.score >= 76) return "Schedule proposal follow-up this week";
+      if (r.segment === "At-risk service") return "Run service-risk discovery call";
+      if (r.stage === "Discovery") return "Book technical discovery session";
+      return "Send tailored dashboard pilot proposal";
+    }
+
+    function nextAction(r) {
+      return escapeHtml(nextActionText(r));
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[ch]));
+    }
+
+    function exportCsv() {
+      const headers = ["account", "industry", "stage", "owner", "revenue", "probability", "ai_score", "segment", "risks", "opportunity", "stack", "next_action"];
+      const rows = filteredRecords().map(r => [r.account, r.industry, r.stage, r.owner, r.revenue, r.probability, r.score, r.segment, r.risks.join("; "), r.opportunity, r.stack.join("; "), nextActionText(r)]);
+      const csv = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "cxm_scored_crm_accounts.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function importCsv(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        const parsed = parseCsv(String(reader.result));
+        const mapped = parsed.map(row => enrich({
+          account: row.account || row.Account || "Imported Account",
+          industry: row.industry || row.Industry || "Imported",
+          stage: stages.includes(row.stage || row.Stage) ? (row.stage || row.Stage) : "Discovery",
+          owner: row.owner || row.Owner || "Grace",
+          revenue: Number(row.revenue || row.Revenue || 25000),
+          probability: Number(row.probability || row.Probability || 35),
+          tickets: Number(row.tickets || row.Tickets || 8),
+          satisfaction: Number(row.satisfaction || row.Satisfaction || 75),
+          lastContact: Number(row.lastContact || row.LastContact || 7),
+          email: row.email || row.Email || "unknown@example.com",
+          duplicate: String(row.duplicate || row.Duplicate || "").toLowerCase() === "true",
+          opportunity: row.opportunity || row.Opportunity || "CRM analytics pilot",
+          stack: String(row.stack || row.Stack || "SQL; Power BI").split(/[;|]/).map(s => s.trim()).filter(Boolean),
+          notes: row.notes || row.Notes || "Imported CRM record."
+        }));
+        if (mapped.length) {
+          records = mapped;
+          selectedAccount = records[0].account;
+          setup();
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function parseCsv(text) {
+      const rows = text.trim().split(/\r?\n/).map(line => line.split(",").map(v => v.replace(/^"|"$/g, "").trim()));
+      const headers = rows.shift() || [];
+      return rows.map(row => Object.fromEntries(headers.map((h, i) => [h, row[i] || ""])));
+    }
+
+    setup();
+  </script>
+</body>
+</html>
