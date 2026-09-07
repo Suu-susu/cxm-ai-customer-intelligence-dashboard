@@ -170,6 +170,45 @@
       line-height: 1.35;
     }
 
+    .depth-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .depth-card {
+      border: 1px solid #d8e2f0;
+      border-radius: 8px;
+      padding: 10px;
+      background: #fff;
+      min-height: 118px;
+    }
+
+    .depth-card h3 {
+      margin: 0 0 6px;
+      font-size: 13px;
+      line-height: 1.25;
+      letter-spacing: 0;
+      color: #1f3354;
+    }
+
+    .depth-card p {
+      margin: 0 0 8px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .depth-card a {
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .depth-card a:hover { text-decoration: underline; }
+
     .panel {
       background: rgba(255,255,255,.95);
       border: 1px solid var(--line);
@@ -452,6 +491,7 @@
       .layout { grid-template-columns: 300px minmax(0, 1fr); }
       .right { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
       .fit-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .depth-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
 
     @media (max-width: 860px) {
@@ -461,6 +501,7 @@
       .metrics { grid-template-columns: 1fr 1fr; }
       .fit-head { display: block; }
       .fit-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .depth-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 560px) {
@@ -507,6 +548,28 @@
         <div class="fit-item"><strong>Azure / Snowflake</strong><span>Cloud-ready data warehouse and integration framing.</span></div>
         <div class="fit-item"><strong>API integration</strong><span>CSV import/export path designed for CRM and service data feeds.</span></div>
         <div class="fit-item"><strong>Generative AI</strong><span>Account context is converted into a practical proposal outline.</span></div>
+      </div>
+      <div class="depth-grid" aria-label="Project depth">
+        <article class="depth-card">
+          <h3>Python data pipeline</h3>
+          <p>Cleans CRM records, flags quality issues, calculates explainable AI-style scores and exports analysis-ready CSV files.</p>
+          <a href="pipeline/clean_crm_data.py">View pipeline</a>
+        </article>
+        <article class="depth-card">
+          <h3>SQL analysis model</h3>
+          <p>Includes scored account views, pipeline summaries, priority account queries and CRM data-quality audit logic.</p>
+          <a href="sql/customer_intelligence_queries.sql">View SQL</a>
+        </article>
+        <article class="depth-card">
+          <h3>Cloud architecture</h3>
+          <p>Maps the portfolio workflow to Salesforce, Python cleaning, Azure/Snowflake storage, dashboard reporting and AI recommendations.</p>
+          <a href="docs/architecture.md">View architecture</a>
+        </article>
+        <article class="depth-card">
+          <h3>Consulting deliverable</h3>
+          <p>Turns account context into next actions, client discussion themes and a structured proposal outline for business users.</p>
+          <a href="https://github.com/Suu-susu/cxm-ai-customer-intelligence-dashboard">View repository</a>
+        </article>
       </div>
     </section>
 
